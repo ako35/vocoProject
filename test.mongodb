@@ -1,0 +1,219 @@
+use("voco-projectDB");
+
+// Problem 1
+
+db.restaurants.insertOne({
+    name: "McDonalds",
+    description: "fast food",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/1/15/McDonald%27s_Golden_Arches.svg",
+    address: "1234 Main Street",
+    location: {
+        type: "Point",
+        coordinates: [100.0, 0.0]
+    },
+    branches: [],
+    menus: [],
+    cuisineTypes: []
+})
+
+db.users.insertOne({
+    username: "test",
+    password: "password",
+    email: "JZwzj@example.com",
+    age: 25,
+    gender: "Male",
+    profilePicture: "https://upload.wikimedia.org/wikipedia/commons/1/15/McDonald%27s_Golden_Arches.svg",
+    address: "1234 Main Street",
+    orderHistory: [],
+    reviewsAndRatings: []
+})
+
+db.restaurants.insertOne({
+    name: "McDonalds",
+    description: "Fast food",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/1/15/McDonald%27s_Golden_Arches.svg",
+    address: "1234 Main Street",
+    location: {
+        type: "Point",
+        coordinates: [100.0, 0.0]
+    },
+    branches: [],
+    menus: [],
+    cuisineTypes: []
+})
+
+db.restaurants.find();
+db.users.find();
+
+db.orders.insertOne({
+    userId: "test",
+    restaurantId: "McDonalds",
+    orderDateTime: new Date(),
+    orderDetails: [],
+})
+
+db.reviews.insertOne({
+    userId: "test",
+    restaurantId: "McDonalds",
+    comment: "Great",
+    rating: 5
+})
+
+db.restaurants.insertOne({
+    name: "McDonalds",
+    description: "lahmacun",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/1/15/McDonald%27s_Golden_Arches.svg",
+    address: "1234 Main Street",
+    location: {
+        type: "Point",
+        coordinates: [39.93, 32.85]
+    },
+    branches: [],
+    menus: [],
+    cuisineTypes: []
+})
+
+db.restaurants.insertOne({
+    name: "Voco Fast Food",
+    description: "lahmacun",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/1/15/McDonald%27s_Golden_Arches.svg",
+    address: "1234 Main Street",
+    location: {
+        type: "Point",
+        coordinates: [39.93, 32.85]
+    },
+    branches: [],
+    menus: [],
+    cuisineTypes: []
+})
+
+db.orders.find();
+db.reviews.find();
+
+// Problem 2
+
+// db.restaurants.createIndex({ location: "2dsphere" })
+
+// db.restaurants.find(
+//     {
+//         description: /lahmacun/i,
+//         location: {
+//             $near: {
+//                 $geometry: {
+//                     type: "Point",
+//                     coordinates: [39.93, 32.85],
+//                 },
+//                 $maxDistance: 10000
+//             }
+//         }
+//     }
+// ).limit(5)
+
+// Problem 3
+
+// const session = db.getMongo().startSession();
+// session.startTransaction();
+
+// try{
+//     const menuItems = [
+//         {
+//             name: "Kucuk boy peynirli pizza",
+//             price: 50
+//         },
+//         {
+//             name: "Orta boy mantarli pizza",
+//             price: 100
+//         },
+//         {
+//             name: "Hamburger",
+//             price: 120
+//         }
+//     ];
+
+//     menuItems.forEach((menuItem) => {
+//         db.restaurants.updateOne(
+//             {
+//                 name: "Voco Fast Food"
+//             },
+//             {
+//                 $push: {
+//                     menus: menuItem
+//                 }
+//             }
+//         )
+//     })
+//     session.commitTransaction();
+// } catch(err) {
+//     console.log(err);
+//     session.abortTransaction();
+// } finally {
+//     session.endSession();
+// }
+
+// db.restaurants.find();
+
+// Problem 4
+
+// db.reviews.aggregate([
+//     {
+//         $lookup: {
+//             from: "users",
+//             localField: "userId",
+//             foreignField: "username",
+//             as: "userDetails",
+//         }
+//     },
+//     {
+//         $match: {
+//           "userDetails.gender": "Male",
+//         }
+//     },
+//     {
+//         $sort: {
+//           "userDetails.age": -1,
+//           "createdAt": -1,
+//         }
+//     },
+//     {
+//         $limit: 20
+//     },
+//     {
+//         $project: {
+//           _id: 0,
+//           userId: 1,
+//           age: 1,
+//           comment: 1,
+//           rating: 1
+//         }
+//     }
+// ])
+
+// Problem 5
+
+// db.restaurants.aggregate([
+//     {
+//       $lookup: {
+//         from: "reviews",
+//         localField: "name",
+//         foreignField: "restaurantId",
+//         as: "reviewDetails",
+//       },
+//     },
+//     {
+//       $match: {
+//         $or: [
+//           { cuisineTypes: { $in: ["fast food", "ev yemekleri"] } },
+//           { description: { $regex: /fast/i } },
+//         ],
+//         "reviewDetails.rating": { $gte: 4 },
+//       },
+//     },
+//     {
+//       $project: {
+//         name: 1,
+//         cuisineTypes: 1,
+//         description: 1,
+//         _id: 0,
+//       },
+//     },
+//   ]);
